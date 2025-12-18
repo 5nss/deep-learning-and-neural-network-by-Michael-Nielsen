@@ -1,0 +1,24 @@
+72 line code overview 
+
+The network is built using a list of numbers, where each number tells how many neurons are in each layer.
+
+Weights connect neurons from one layer to the next, and biases help decide when a neuron should turn on. They are given random values so all neurons don’t act the same.
+
+Feedforward means the input data moves forward through the network layer by layer to produce an output.
+
+During feedforward, the network only makes a prectiction. Nothing is learned or changed at this stage.
+
+Learning starts when the network compares its final output with the correct answer to see how wrong it is.
+
+This difference is measured using a cost function, which tells how bad the mistake is.
+
+Backpropagation sends this mistake backward through the network to understand which weights and biases caused the error.
+
+Each neuron gets a “blame value” that shows how much it contributed to the mistake and whether it can change its output. "blame value" = derivative of difference in value * sensitivity of the neuron
+
+Using this "blame value" , the network calculates how each weight and bias should be changed to reduce future errors.
+
+Stochastic Gradient Descent helps learning happen faster by updating the network using small groups(mini batchs) of data instead of the full dataset.
+
+Training happens many times (called epochs), where the network keeps guessing, checking mistakes, and fixing itself little by little.
+epochs is must be larger enough to make model to learn patterns if over trained (too large epochs value) the network will memorize the data instead of training and ,this is called overfitting
