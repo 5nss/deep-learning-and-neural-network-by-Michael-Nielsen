@@ -57,3 +57,4 @@ Updating the network more frequently
 and makes learning faster.
 the small random subset are called mini batch.
 
+the updats is from the backpropagation(Backpropagation computes how much each weight and bias contributed to the final error, so they can be corrected.)
