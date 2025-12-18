@@ -1,0 +1,59 @@
+A neural network is a fascinating concept introduced by how the human brain works.
+It is a system that learns patterns by passing information through layers of neurons.
+A basic neural network has three types of layers = 
+
+Input layer – receives raw data
+Hidden layers – processes patterns
+Output layer – produces the final prediction
+
+Inputs - small pieces of information coming from the previous layer
+Weights – decide how strongly each input influences the output
+Bias – shifts the decision boundary. controls when the neuron should activate
+Activation function – decides the final output of the neuron
+
+A neuron decides whether the combined input is strong enough to activate and pass information forward.
+a neuron behave like NAND gate so we can make any complex equation from that
+
+perceptron and sigmoid
+
+A perceptron produces only two outputs: 0 or 1.
+This creates a hard step decision.
+
+A sigmoid neuron produces values between 0 and 1.
+This makes the output smooth and continuous.
+
+in a perceptron, small changes in weights or bias cause sudden jumps in output.
+This breaks continuous learning while Sigmoid allows gradual changes in output, which makes learning stable and possible.
+
+Feedforward
+The output of one layer becomes the input to the next layer this is feedforward logic
+note : learning not happen here because weights and biases remain fixed during feedforward
+The final output layer gives the predicted result
+
+Looping over neurons one by one is inefficient Instead, we treat
+Inputs as vectors
+Weights as matrices
+This allows us to process an entire layer at once.
+
+Gradient Descent
+
+Gradient descent is where learning actually happens.
+it requires a cost function, which measures how wrong the network’s output is compared to the desired output.
+You can imagine the cost function as a hill area:
+top position mean large error
+The lowest point means minimum error
+
+Steps should be small and controlled (eta = min) because too high or too low step means it move randomly and ended inefficient
+
+Stochastic Gradient Descent (SGD)
+
+Full gradient descent is slow because it uses the entire dataset to make a single update.
+For large datasets, this requires too much time and memory.
+
+Stochastic Gradient Descent is:
+
+Using small random subsets of data
+Updating the network more frequently
+and makes learning faster.
+the small random subset are called mini batch.
+
