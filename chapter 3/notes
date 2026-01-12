@@ -1,1 +1,60 @@
-Cross entropy
+# Neural Networks: Cross-Entropy & Overfitting
+
+## 1. Cross-Entropy Cost Function
+
+**Why do we need it?**
+* **The Problem with Quadratic Cost:** It suffers from "Learning Slowdown." When a neuron is saturated (output is completely wrong, close to 0 or 1), the gradient becomes almost zero. The network stops learning even though the error is huge.
+* **The Solution:** Cross-Entropy is designed to solve this.
+    * Mathematically, it cancels out the derivative term ($\sigma'$) that causes the slowdown.
+    * **Result:** The learning rate is now proportional to the error.
+        * **Big Error** = Fast Learning.
+        * **Small Error** = Fine-tuning.
+
+**Intuitive Meaning**
+* Think of it as measuring **"Shock."**
+* If the model is 100% confident it's a "7" but the truth is "3", the surprise is infinite $\rightarrow$ the cost is massive.
+
+
+## 2. Overfitting (The "Elephant" Problem)
+
+> *"With four parameters I can fit an elephant, and with five I can make him wiggle his trunk."* > — *Enrico Fermi (referencing Von Neumann)*
+
+**What is Overfitting?**
+* The model doesn't learn the actual **pattern**; it just **memorizes** the training data.
+* It starts picking up random noise (dust, scratches) in the images instead of the digit shape.
+
+**Analogy: The Student & The Exam**
+* **Small Data:** Like a student with only 10 practice questions. They will just "mug up" (memorize) the answers. They pass the practice test but fail the real exam because they don't know the concept.
+* **Big Data:** Like having 100,000 questions. You *can't* mug up that much. You are forced to actually learn the logic to pass.
+
+**Causes**
+1.  **Too many epochs:** After the model learns the signal, if training continues, it starts learning the noise.
+2.  **Too little data:** It's easy to fit a complex curve through a few points.
+3.  **Model too complex:** Having 24,000 parameters (weights) for only 1,000 images allows the model to "cheat."
+
+**Detection (The Graph)**
+* **Training Cost:** Keeps going down (can hit 0).
+* **Validation Cost:** Goes down initially, then **stucks** or starts going up.
+* **The Catch:** If Training accuracy is rising but Validation accuracy is flat, the model is overfitting.
+
+
+## 3. The Solution: Data Splitting
+
+To fix overfitting, we don't just use one dataset. We split data into **3 buckets**:
+
+### 1. Training Data (The Classroom)
+* Used for **Backpropagation**.
+* This is where the network actually learns the weights and biases (like teaching in class).
+
+### 2. Validation Data (The Daily Mock Test)
+* Used to monitor performance *during* training.
+* **Early Stopping:** If the accuracy on the Validation set stops increasing, we **STOP** training immediately.
+* This prevents the model from memorizing noise.
+* Also used to tune hyper-parameters (learning rate, batch size).
+
+### 3. Test Data (The Final Board Exam)
+* Used **ONLY ONCE** at the very end.
+* **Why separate from Validation?**
+    * If we used Test data to decide when to stop, we are effectively "peeking" at the final exam paper.
+    * We might tune the model to pass *that specific exam* rather than generalizing.
+* The Test data result is the only honest metric of how the model performs in the real world.
