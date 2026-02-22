@@ -1,0 +1,9 @@
+ Data Expansion: Identify a potential problem with expanding MNIST training data by allowing arbitrarily large rotations of training images
+ soln - 
+ lets consider - large variation result in change of the result class that specific to it like 6 is rotated by 180 degree it will turn into 9 so that problem arises
+
+  Obstacles to Gradient Descent: Identify obstacles to using gradient descent to determine the hyper-parameters λ (regularization parameter) and η (learning rate)
+  soln - lamda - we cannot apply gd here because the actual concept of usong lamds is to increase the cost function value if we apply gd to lamda then it will get that value to the 0 so the overall function of the regularisation is defeated here 
+  eta - here also we cannot apply gd because here eta is not a variable the influnce the cost funstion its just the step size of the next iteration of the cost function
+
+  
