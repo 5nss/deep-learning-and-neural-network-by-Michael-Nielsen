@@ -171,7 +171,7 @@ class Network(object):
                             current_eta = current_eta / 2.0
                             no_improvement_count = 0
                             print(f"Plateau! Dropping eta to: {current_eta}")
-                            if current_eta <= (eta / 1000.0):
+                            if current_eta <= (eta / 128.0):
                                 print("Learning rate exhausted. Terminating.")
                                 return evaluation_cost, evaluation_accuracy, training_cost, training_accuracy
                         else:
