@@ -105,112 +105,81 @@ class Network(object):
             a = sigmoid(np.dot(w, a)+b)
         return a
 
-    def SGD(self, training_data, epochs, mini_batch_size, eta,
+   def SGD(self, training_data, epochs, mini_batch_size, eta,
             lmbda = 0.0,
             evaluation_data=None,
             monitor_evaluation_cost=False,
             monitor_evaluation_accuracy=False,
             monitor_training_cost=False,
             monitor_training_accuracy=False,
-            early_stopping_n = 0):
-        """Train the neural network using mini-batch stochastic gradient
-        descent.  The ``training_data`` is a list of tuples ``(x, y)``
-        representing the training inputs and the desired outputs.  The
-        other non-optional parameters are self-explanatory, as is the
-        regularization parameter ``lmbda``.  The method also accepts
-        ``evaluation_data``, usually either the validation or test
-        data.  We can monitor the cost and accuracy on either the
-        evaluation data or the training data, by setting the
-        appropriate flags.  The method returns a tuple containing four
-        lists: the (per-epoch) costs on the evaluation data, the
-        accuracies on the evaluation data, the costs on the training
-        data, and the accuracies on the training data.  All values are
-        evaluated at the end of each training epoch.  So, for example,
-        if we train for 30 epochs, then the first element of the tuple
-        will be a 30-element list containing the cost on the
-        evaluation data at the end of each epoch. Note that the lists
-        are empty if the corresponding flag is not set.
+            early_stopping_n = 0,
+            lr_schedule = False): # Added schedule flag
 
-        """
-
-        # early stopping functionality:
-        best_accuracy=1
-
+        best_accuracy = 0
+        no_improvement_count = 0
+        current_eta = eta
+        
         training_data = list(training_data)
         n = len(training_data)
-
         if evaluation_data:
             evaluation_data = list(evaluation_data)
             n_data = len(evaluation_data)
 
-        # early stopping functionality:
-        best_accuracy=0
-        no_accuracy_change=0
-
         evaluation_cost, evaluation_accuracy = [], []
         training_cost, training_accuracy = [], []
+
         for j in range(epochs):
             random.shuffle(training_data)
-            mini_batches = [
-                training_data[k:k+mini_batch_size]
-                for k in range(0, n, mini_batch_size)]
+            mini_batches = [training_data[k:k+mini_batch_size]
+                            for k in range(0, n, mini_batch_size)]
+            
             for mini_batch in mini_batches:
-                self.update_mini_batch(
-                    mini_batch, eta, lmbda, len(training_data))
+                # IMPORTANT: Use current_eta here to support the schedule
+                self.update_mini_batch(mini_batch, current_eta, lmbda, n)
 
-            print("Epoch %s training complete" % j)
+            print(f"Epoch {j} training complete")
 
+            # Monitoring logic
             if monitor_training_cost:
                 cost = self.total_cost(training_data, lmbda)
                 training_cost.append(cost)
-                print("Cost on training data: {}".format(cost))
+                print(f"Cost on training data: {cost}")
             if monitor_training_accuracy:
                 accuracy = self.accuracy(training_data, convert=True)
                 training_accuracy.append(accuracy)
-                print("Accuracy on training data: {} / {}".format(accuracy, n))
+                print(f"Accuracy on training data: {accuracy} / {n}")
             if monitor_evaluation_cost:
                 cost = self.total_cost(evaluation_data, lmbda, convert=True)
                 evaluation_cost.append(cost)
-                print("Cost on evaluation data: {}".format(cost))
-            if monitor_evaluation_accuracy:
-                accuracy = self.accuracy(evaluation_data)
-                evaluation_accuracy.append(accuracy)
-                print("Accuracy on evaluation data: {} / {}".format(self.accuracy(evaluation_data), n_data))
+                print(f"Cost on evaluation data: {cost}")
+            
+            # Accuracy monitoring and Early Stopping/Schedule logic
+            if evaluation_data and monitor_evaluation_accuracy:
+                current_accuracy = self.accuracy(evaluation_data)
+                evaluation_accuracy.append(current_accuracy)
+                print(f"Accuracy on evaluation data: {current_accuracy} / {n_data}")
 
-            # Early stopping:
-            if early_stopping_n > 0:
-                if accuracy > best_accuracy:
-                    best_accuracy = accuracy
-                    no_accuracy_change = 0
-                    #print("Early-stopping: Best so far {}".format(best_accuracy))
-                else:
-                    no_accuracy_change += 1
+                if early_stopping_n > 0:
+                    if current_accuracy > best_accuracy:
+                        best_accuracy = current_accuracy
+                        no_improvement_count = 0
+                    else:
+                        no_improvement_count += 1
 
-                if (no_accuracy_change == early_stopping_n):
-                    #print("Early-stopping: No accuracy change in last epochs: {}".format(early_stopping_n))
-                    return evaluation_cost, evaluation_accuracy, training_cost, training_accuracy
+                    if no_improvement_count >= early_stopping_n:
+                        if lr_schedule:
+                            current_eta = current_eta / 2.0
+                            no_improvement_count = 0
+                            print(f"Plateau! Dropping eta to: {current_eta}")
+                            if current_eta <= (eta / 1000.0):
+                                print("Learning rate exhausted. Terminating.")
+                                return evaluation_cost, evaluation_accuracy, training_cost, training_accuracy
+                        else:
+                            print(f"Early stopping at epoch {j}")
+                            return evaluation_cost, evaluation_accuracy, training_cost, training_accuracy
+            print()
 
-        return evaluation_cost, evaluation_accuracy, \
-            training_cost, training_accuracy
-
-    def update_mini_batch(self, mini_batch, eta, lmbda, n):
-        """Update the network's weights and biases by applying gradient
-        descent using backpropagation to a single mini batch.  The
-        ``mini_batch`` is a list of tuples ``(x, y)``, ``eta`` is the
-        learning rate, ``lmbda`` is the regularization parameter, and
-        ``n`` is the total size of the training data set.
-
-        """
-        nabla_b = [np.zeros(b.shape) for b in self.biases]
-        nabla_w = [np.zeros(w.shape) for w in self.weights]
-        for x, y in mini_batch:
-            delta_nabla_b, delta_nabla_w = self.backprop(x, y)
-            nabla_b = [nb+dnb for nb, dnb in zip(nabla_b, delta_nabla_b)]
-            nabla_w = [nw+dnw for nw, dnw in zip(nabla_w, delta_nabla_w)]
-        self.weights = [w - (eta * lmbda / n) * np.sign(w) - (eta / len(mini_batch)) * nw
-                        for w, nw in zip(self.weights, nabla_w)]
-        self.biases = [b-(eta/len(mini_batch))*nb
-                       for b, nb in zip(self.biases, nabla_b)]
+        return evaluation_cost, evaluation_accuracy, training_cost, training_accuracy
 
     def backprop(self, x, y):
         """Return a tuple ``(nabla_b, nabla_w)`` representing the
