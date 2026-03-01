@@ -128,3 +128,11 @@ OTHER TECHNIQUES TO SDG
     Build "velocity" to skip over small bumps.
     but adds a new hyperparameter (mu) to tune.
 
+Other neurons 
+TANH - Its just a rescaled sigmoid like sigmoid varies from 0 to 1 and it varies from -1 to +1 with 0 as a center
+Because tanh is symmetric around zero, it allows for both positive and negative activations. This "balances" the weight updates, potentially leading to faster convergence rather than the forcing the gradients for all weights connected to a single neuron to have the same sign in the sigmoid
+
+ReLU - f(z) = max(0, z). If the input is positive, it outputs the input; if negative, it outputs zero.
+it do not have the saturation problem like in sigmoid and tanh, like for any positive input gradient of a ReLU is always 1. It never saturates on the positive side, allowing the network to keep learning even with very large weighted inputs.
+but on the other sign Relu is stoped working where a neuron stops learning entirely because it never receives a positive signal to "wake it up."
+
