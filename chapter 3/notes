@@ -1,4 +1,3 @@
-
 Cross-Entropy Cost Function
 Why even care about this?
 So basically, the old quadratic cost function has this annoying problem - when the neuron output is REALLY wrong (like super close to 0 or 1), it just... stops learning. The gradient becomes tiny even though the error is massive. Not ideal.
@@ -95,13 +94,30 @@ Starting with standard Gaussian weights (σ=1) makes the weighted sum z HUGE whe
 → neurons get saturated (stuck in flat parts of sigmoid)
 → learning is super slow
 The Fix:
-Scale initial weights to have std dev = 1/√(n_in)
+Scale initial weights to have std dev = 1/rootOf(n_in)
 Result:
 Keeps neurons in the "active" region where they can learn quickly
 
-learning rate choose tecnique 
+HYPER PARAMETER CHOOSING TECNIQUE
+STRIP DOWN TECHNIQUE - reduce the no of data and scale down the networks architecture
+ If eta works for a simple model, it’s a great starting point for a complex one.
+
+learning rate choose tecnique - EARLY STOPPING
+ Monitor validation accuracy every epoch. If it doesn't improve for n epochs (Patience), stop.
+ It Automatically finds the "optimal" number of epochs and prevents overfitting.
+
+Learning Rate Schedule
 - Hold eta constant as long as the validation accuracy is improving.
 - Decrease eta once the validation accuracy starts to drop.
 - Repeat this process until the learning rate becomes extremely small about 1,000 times smaller than the starting value.
 - Terminate the training at that point.
 == using this we can apply coarse to fine approach to the eta values
+
+Iterative Workflow 
+  Isolate: Use a tiny dataset to find the Order of Magnitude for eta.
+  Scale: Move to the full dataset and increase network complexity.
+  Regularize: Add lambda to close the gap between training and validation accuracy.
+  Refine: Turn on the Learning Rate Schedule to "zoom in" on the absolute minimum cost.
+  Abandon: Recognize that the search space is infinite—once you hit a "pretty good" result, move on
+
+
