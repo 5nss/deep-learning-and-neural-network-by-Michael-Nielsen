@@ -98,3 +98,10 @@ The Fix:
 Scale initial weights to have std dev = 1/√(n_in)
 Result:
 Keeps neurons in the "active" region where they can learn quickly
+
+learning rate choose tecnique 
+- Hold eta constant as long as the validation accuracy is improving.
+- Decrease eta once the validation accuracy starts to drop.
+- Repeat this process until the learning rate becomes extremely small about 1,000 times smaller than the starting value.
+- Terminate the training at that point.
+== using this we can apply coarse to fine approach to the eta values
