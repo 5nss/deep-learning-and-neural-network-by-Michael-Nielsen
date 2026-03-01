@@ -11,5 +11,9 @@ implemented early stoping in the network2.py
   the network stopped traning at 18th epoch instead of 30 epoch 
 hence succeesfully stoped the over training issue
 
+What would go wrong if we used μ>1
+ in the momentum technique? - every time the ball moves, it gains speed regardless of the gradient. The velocity will grow to infinity, and the weights will explode
+What would go wrong if we used μ<0
+ in the momentum technique? - This would cause the ball to "flip" its velocity every step and act like vibrating between + and - (like =5,-4.5,+4.0,-4.6)
 
 
