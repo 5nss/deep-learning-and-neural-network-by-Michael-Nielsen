@@ -120,4 +120,11 @@ Iterative Workflow
   Refine: Turn on the Learning Rate Schedule to "zoom in" on the absolute minimum cost.
   Abandon: Recognize that the search space is infinite—once you hit a "pretty good" result, move on
 
+OTHER TECHNIQUES TO SDG
+- Hessian
+    Use the curvature (2nd derivative).
+    but matrix is too big to compute.
+- Momentum
+    Build "velocity" to skip over small bumps.
+    but adds a new hyperparameter (mu) to tune.
 
