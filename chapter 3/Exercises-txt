@@ -1,3 +1,5 @@
+Explain why the presence of the xj term in the gradient equation means learning will still be slow when an input xj is near zero, regardless of the cost function used 
+    In the first layer of the network, the "activation" is just the input xi so if xj is small or near to 0 the entire gradient become zero regardless of how much error it is 
 Data Expansion: Identify a potential problem with expanding MNIST training data by allowing arbitrarily large rotations of training images
  soln - 
  lets consider - large variation result in change of the result class that specific to it like 6 is rotated by 180 degree it will turn into 9 so that problem arises
